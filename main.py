@@ -153,8 +153,8 @@ def pullDataFromExcel():
         # removed cell_percentage.value != 0 because it causes the json to be super empty
         # it would make more sense to check the start date to see if the project should be started which is column G in Excel
         # which could use the unused cell_date for a more accurate list of what needs to be started
-        if cell_percentage.value != 0.100 and cell_section.value != "Business":
-            projects[cell_section.value].append({"projectname": cell_system.value, "percent": int(cell_percentage.value * 100)})
+        if cell_percentage.value != 1 and cell_section.value != "Business":
+            projects[cell_section.value].append({"projectname": cell_system.value, "percent": cell_percentage.value})
 
     excelOpen.close()  # This was behind the return function this should be here if you want it to run.
     return projects
