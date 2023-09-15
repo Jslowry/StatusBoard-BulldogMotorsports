@@ -1,6 +1,9 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-import json
+import json, openpyxl, time
+
+start_time = time.time()
+
 
 
 root = tk.Tk()
@@ -43,13 +46,15 @@ Logolabel.place(x= 400, y= 50)
 
 
 
+
+
 # Controls Collumn
 
 
 # For percentage bar, overlap an orange rectangle over a white one and adjust the x value
 
-ctrl_canvas = tk.Canvas(root, width=200, height=400, borderwidth = 2, relief="raised")
-ctrl_canvas.create_rectangle(0, 0, 300, 400, fill=MSU_Maroon)
+ctrl_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
+ctrl_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
 ctrl_canvas.create_text(100, 25, text="Controls", font=("Arial", 20), fill="white")
 
@@ -64,7 +69,7 @@ ctrl_canvas.place(x=100,y=200)
 
 # PowerTrain Collumn
 
-pwT_canvas = tk.Canvas(root, width=200, height=400, borderwidth = 2, relief="raised")
+pwT_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
 pwT_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
 
 pwT_canvas.create_text(100, 25, text="PowerTrain", font=("Arial", 20), fill="white")
@@ -74,7 +79,7 @@ pwT_canvas.place(x=350,y=200)
 
 # Drivetrain Collumn
 
-drT_canvas = tk.Canvas(root, width=200, height=400, borderwidth = 2, relief="raised")
+drT_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
 drT_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
 
 drT_canvas.create_text(100, 25, text="DriveTrain", font=("Arial", 20), fill="white")
@@ -84,7 +89,7 @@ drT_canvas.place(x=600,y=200)
 
 # Suspension Collumn
 
-sus_canvas = tk.Canvas(root, width=200, height=400, borderwidth = 2, relief="raised")
+sus_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
 sus_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
 
 sus_canvas.create_text(100, 25, text="Suspension", font=("Arial", 20), fill="white")
@@ -93,17 +98,17 @@ sus_canvas.place(x=850,y=200)
 
 # Chasis Collumn
 
-chas_canvas = tk.Canvas(root, width=200, height=400, borderwidth = 2, relief="raised")
+chas_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
 chas_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
 
-chas_canvas.create_text(100, 25, text="Chasis", font=("Arial", 20), fill="white")
+chas_canvas.create_text(100, 25, text="Chassis", font=("Arial", 20), fill="white")
 
 
 chas_canvas.place(x=1100,y=200)
 
 # Electrical Collumn
 
-elec_canvas = tk.Canvas(root, width=200, height=400, borderwidth = 2, relief="raised")
+elec_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
 elec_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
 
 elec_canvas.create_text(100, 25, text="Electrical", font=("Arial", 20), fill="white")
@@ -113,7 +118,7 @@ elec_canvas.place(x=1350,y=200)
 
 # Aero Collumn
 
-aero_canvas = tk.Canvas(root, width=200, height=400, borderwidth = 2, relief="raised")
+aero_canvas = tk.Canvas(root, width=200, height=500, borderwidth = 2, relief="raised")
 aero_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
 
 aero_canvas.create_text(100, 25, text="Aero", font=("Arial", 20), fill="white")
@@ -124,19 +129,53 @@ aero_canvas.place(x=1600,y=200)
 
 #Bottom Schedule
 
-footerBar = tk.Canvas(root, width= 1000, height = 200, borderwidth = 2, relief="groove" )
-footerBar.create_rectangle(0, 0, 1002 , 202, fill=MSU_Maroon)
+footerBar = tk.Canvas(root, width= 1500, height = 150, borderwidth = 2, relief="groove" )
+footerBar.create_rectangle(0, 0, 1502 , 152, fill=MSU_Maroon)
 
-footerBar.place(x= 480, y= 750)
+footerBar.place(x= 250, y= 850)
 
 
 # Important Dates Text
 
 label = tk.Label(root, text="Important Dates", font=('Arial', 55), bg="black", fg="white")
-label.place(x=700, y=650)
+label.place(x=720, y=750)
 
 
 
+def findLastProjectRow():
+    excelOpen = openpyxl.load_workbook('Master Schedule 2024.xlsx')
+    activeExcel = excelOpen.active
+    for i in range(8 , 500):
+        cell_section = activeExcel.cell(row = i, column = 1)
+        if (cell_section.value == None):
+            break
+    return i
+
+
+def pullDataFromExcel():
+    excelOpen = openpyxl.load_workbook('Master Schedule 2024.xlsx')
+    activeExcel = excelOpen.active
+    max_row = findLastProjectRow()
+    projects = { "Controls" : [], "Drivetrain" :  [], "Powertrain" : [], "Suspension" : [], "Chassis" : [], "Electrical" : [], "Aerodynamics" : []}
+    for i in range(8, max_row):
+        cell_section = activeExcel.cell(row = i, column = 1)
+        cell_percentage = activeExcel.cell(row = i, column = 6)
+        cell_date = activeExcel.cell(row = i, column = 8)
+        cell_system = activeExcel.cell(row = i, column = 2)
+        if (cell_percentage.value != 0 and cell_percentage.value != 0.100 and cell_section.value != "Business" ):
+            projects[cell_section.value].append({"projectname":cell_system.value, "percent":int(cell_percentage.value * 100)})
+
+    return projects
+            
+    excelOpen.close()
+
+
+
+def dumpProjectData2JSON():
+    projectData = pullDataFromExcel()
+    with open('excelData.json', 'w') as json_file:
+                json.dump(projectData, json_file)
+                json_file.close
 
 
 
@@ -226,14 +265,13 @@ def editButton():
         footerBar.delete("text") # deletes any previous values displayed in the footer
 
         data = getImportantDates()
-        for i in range(3):
-            footerBar.create_text(150, 40, text=data["task1"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-            footerBar.create_text(150, 100, text=data["task2"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-            footerBar.create_text(150, 160, text=data["task3"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-            for i in range(3):
-                footerBar.create_text(600, 40, text=data["task4"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-                footerBar.create_text(600, 100, text=data["task5"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-                footerBar.create_text(600, 160, text=data["task6"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+        footerBar.create_text(100, 40, text=data["task1"]["task"], font=("Helvetica", 20), fill="white", anchor="w")   # rewrite to make it populate 
+        footerBar.create_text(100, 100, text=data["task2"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+        footerBar.create_text(550, 160, text=data["task3"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+
+        footerBar.create_text(550, 40, text=data["task4"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+        footerBar.create_text(1000, 100, text=data["task5"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+        footerBar.create_text(100, 160, text=data["task6"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
 
     # will update the data on closure of the edit window
     
@@ -319,5 +357,8 @@ ExitButton = tk.Button(text="Exit", command=root.destroy, image = redX, borderwi
 ExitButton.place(x=1830, y= 30)
 
 
+
+
+print("--- %s seconds ---" % (time.time() - start_time))
 
 root.mainloop()
