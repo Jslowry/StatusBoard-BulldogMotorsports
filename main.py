@@ -244,19 +244,6 @@ def pullDataFromExcel():
 
     excelOpen.close()  # This was behind the return function this should be here if you want it to run.
     return projects
-=======
-    projects = { "Controls" : [], "Drivetrain" :  [], "Powertrain" : [], "Suspension" : [], "Chassis" : [], "Electrical" : [], "Aerodynamics" : []}
-    for i in range(8, max_row):
-        cell_section = activeExcel.cell(row = i, column = 1)
-        cell_percentage = activeExcel.cell(row = i, column = 6)
-        cell_date = activeExcel.cell(row = i, column = 8)
-        cell_system = activeExcel.cell(row = i, column = 2)
-        if (cell_percentage.value != 0 and cell_percentage.value != 0.100 and cell_section.value != "Business" ):
-            projects[cell_section.value].append({"projectname":cell_system.value, "percent":int(cell_percentage.value * 100)})
-
-    return projects
-            
-    excelOpen.close()
 
 
 
