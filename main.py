@@ -38,7 +38,7 @@ saveButton = ImageTk.PhotoImage(imageSave)
 imageExitMaroon = Image.open("maroonX.png")
 maroonX = ImageTk.PhotoImage(imageExitMaroon)
 
-imageSaveExit = Image.open("saveandexit.png")
+imageSaveExit = Image.open("save and exit.png")
 saveExit = ImageTk.PhotoImage(imageSaveExit)
 
 # Placing Logo
@@ -207,10 +207,6 @@ def pullDataFromExcel():
 
     excelOpen.close()  # This was behind the return function this should be here if you want it to run.
     return projects
-<<<<<<< HEAD
-
-=======
->>>>>>> ec49276740c02311812543abebb9167739d58e6f
 
 
 
@@ -406,7 +402,5 @@ ExitButton.place(x=1830, y=30)
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
-
-print("--- %s seconds ---" % (time.time() - start_time))
 
 root.mainloop()
