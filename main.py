@@ -38,6 +38,8 @@ saveButton = ImageTk.PhotoImage(imageSave)
 imageExitMaroon = Image.open("maroonX.png")
 maroonX = ImageTk.PhotoImage(imageExitMaroon)
 
+imageSaveExit = Image.open("saveandexit.png")
+saveExit = ImageTk.PhotoImage(imageSaveExit)
 
 # Placing Logo
 Logo_label = tk.Label(image=logo, borderwidth=0)
@@ -55,80 +57,56 @@ Logolabel.place(x= 400, y= 50)
 
 
 
-
-# Controls Collumn
-
-
-Logo_label.place(x=400, y=50)
-
 # Controls Column
-# For percentage bar, overlap an orange rectangle over a white one and adjust the x value
 
+
+# For percentage bar, overlap an orange rectangle over a white one and adjust the x value
 
 controls_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
 controls_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
-ctrl_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
-ctrl_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
-
-controls_canvas.create_text(100, 25, text="Controls", font=("Arial", 20), fill="white")
+controls_canvas.create_text(100, 25, text="Controls", font=("Arial", 25), fill="white")
 
 controls_canvas.create_text(165, 67, text="StatusBoard Coding Project", font=("Arial", 8), fill="white", anchor='e')
 
 # percentage bar  ↓↓↓↓
 
-controls_canvas.create_rectangle(30, 80, 170, 100, fill="white")  # keep static
-controls_canvas.create_rectangle(30, 80, 120, 100, fill="orange")
+controls_canvas.create_rectangle(30, 80, 170, 100, fill="white") 
+controls_canvas.create_rectangle(30, 80, 120, 100, fill="orange") 
 
-ctrl_canvas.create_rectangle(30, 80, 170, 100, fill="white") # keep static
-ctrl_canvas.create_rectangle(30, 80, 120, 100, fill="orange")
+controls_canvas.place(x=100,y=200)
 
-
-ctrl_canvas.place(x=100,y=200)
-
-# PowerTrain Collumn
-
-pwT_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
-pwT_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
-
-
-controls_canvas.place(x=100, y=200)
 
 # PowerTrain Column
 
 powerTrain_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
-powerTrain_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
+powerTrain_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
-powerTrain_canvas.create_text(100, 25, text="PowerTrain", font=("Arial", 20), fill="white")
 
+powerTrain_canvas.create_text(100, 25, text="PowerTrain", font=("Arial", 25), fill="white")
 
 powerTrain_canvas.place(x=350, y=200)
-
-drT_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
-drT_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
 
 
 # Drivetrain Column
 
 driveTrain_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
-driveTrain_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
+driveTrain_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
-driveTrain_canvas.create_text(100, 25, text="DriveTrain", font=("Arial", 20), fill="white")
+
+driveTrain_canvas.create_text(100, 25, text="DriveTrain", font=("Arial", 25), fill="white")
 
 driveTrain_canvas.place(x=600, y=200)
 
 
 # Suspension Column
 
-sus_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
-sus_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
+suspension_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
+suspension_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
 
-suspension_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
-suspension_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
-
-suspension_canvas.create_text(100, 25, text="Suspension", font=("Arial", 20), fill="white")
+suspension_canvas.create_text(100, 25, text="Suspension", font=("Arial", 25), fill="white")
 
 suspension_canvas.place(x=850, y=200)
 
@@ -136,15 +114,10 @@ suspension_canvas.place(x=850, y=200)
 # Chassis Column
 
 chassis_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
-chassis_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
-
-chas_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
-chas_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
-
-chas_canvas.create_text(100, 25, text="Chassis", font=("Arial", 20), fill="white")
+chassis_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
 
-chassis_canvas.create_text(100, 25, text="Chassis", font=("Arial", 20), fill="white")
+chassis_canvas.create_text(100, 25, text="Chassis", font=("Arial", 25), fill="white")
 
 chassis_canvas.place(x=1100, y=200)
 
@@ -152,28 +125,22 @@ chassis_canvas.place(x=1100, y=200)
 
 
 electrical_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
-electrical_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
-
-elec_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
-elec_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
+electrical_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
 
-electrical_canvas.create_text(100, 25, text="Electrical", font=("Arial", 20), fill="white")
-
+electrical_canvas.create_text(100, 25, text="Electrical", font=("Arial", 25), fill="white")
 
 electrical_canvas.place(x=1350, y=200)
 
 
 # Aero Column
-aero_canvas = tk.Canvas(root, width=200, height=500, borderwidth=2, relief="raised")
 
-# Aero Collumn
 
-aero_canvas = tk.Canvas(root, width=200, height=500, borderwidth = 2, relief="raised")
+aero_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
+aero_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
-aero_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
 
-aero_canvas.create_text(100, 25, text="Aero", font=("Arial", 20), fill="white")
+aero_canvas.create_text(100, 25, text="Aero", font=("Arial", 25), fill="white")
 
 aero_canvas.place(x=1600, y=200)
 
@@ -183,10 +150,6 @@ aero_canvas.place(x=1600, y=200)
 footerBar = tk.Canvas(root, width=1500, height=150, borderwidth=2, relief="groove")
 footerBar.create_rectangle(0, 0, 1502, 152, fill=MSU_Maroon)
 
-footerBar.place(x=250, y=850)
-
-footerBar = tk.Canvas(root, width= 1500, height = 150, borderwidth = 2, relief="groove" )
-footerBar.create_rectangle(0, 0, 1502 , 152, fill=MSU_Maroon)
 
 footerBar.place(x= 250, y= 850)
 
@@ -194,7 +157,7 @@ footerBar.place(x= 250, y= 850)
 
 # Important Dates Text
 label = tk.Label(root, text="Important Dates", font=('Arial', 55), bg="black", fg="white")
-label.place(x=720, y=750)
+label.place(x=715, y=760)
 
 
 
@@ -244,6 +207,10 @@ def pullDataFromExcel():
 
     excelOpen.close()  # This was behind the return function this should be here if you want it to run.
     return projects
+<<<<<<< HEAD
+
+=======
+>>>>>>> ec49276740c02311812543abebb9167739d58e6f
 
 
 
@@ -255,13 +222,6 @@ def dumpProjectData2JSON():
         json.dump(projectData, json_file)
         json_file.close
         # ^ this doesn't seem to do anything according to pycharm
-
-
-# Button that calls edit function for important Dates
-# #(CONTAINS MANY FUNCTIONS TO READ AND WRITE TO JSON AND TO DISPLAY DATES)
-
-                json.dump(projectData, json_file)
-                json_file.close
 
 
 
@@ -352,25 +312,29 @@ def editButton():
     # places the data from the dictionary into displayable text
     
     def displayImportantDates():
-        footerBar.delete("text") # deletes any previous values displayed in the footer
 
         data = getImportantDates()
-        footerBar.create_text(100, 40, text=data["task1"]["task"], font=("Helvetica", 20), fill="white", anchor="w")   # rewrite to make it populate 
-        footerBar.create_text(100, 100, text=data["task2"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-        footerBar.create_text(550, 160, text=data["task3"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
 
-        footerBar.create_text(550, 40, text=data["task4"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-        footerBar.create_text(1000, 100, text=data["task5"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-        footerBar.create_text(100, 160, text=data["task6"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+        footerBar.create_rectangle(0, 0, 1502 , 152, fill=MSU_Maroon) # Drawing over the old maroon rectangle
+    
+        footerBar.create_text(150, 40, text=data["task1"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+        footerBar.create_text(150, 110, text=data["task2"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+    
+        footerBar.create_text(650, 40, text=data["task3"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+        footerBar.create_text(650, 110, text=data["task4"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+    
+        footerBar.create_text(1100, 40, text=data["task5"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+        footerBar.create_text(1100, 110, text=data["task6"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
 
 
     # will update the data on closure of the edit window
     def exit_editButton():
+        setImportantDates()
         displayImportantDates()
         edit_window.destroy()
 
-    save_button = tk.Button(edit_window, text="Save", image=saveButton, borderwidth=0, highlightthickness=0, command=setImportantDates)
-    exit_button = tk.Button(edit_window, text="Exit", command=exit_editButton, image = maroonX, borderwidth=0, highlightthickness=0)
+    #save_button = tk.Button(edit_window, text="Save", image=saveButton, borderwidth=0, highlightthickness=0, command=setImportantDates)
+    exit_button = tk.Button(edit_window, text="Exit", command=exit_editButton, image = saveExit, borderwidth=0, highlightthickness=0)
 
     # Placing text boxes for important dates entry
     task1.place(x=60, y=10)
@@ -397,14 +361,13 @@ def editButton():
     task6Entry.place(x=370, y=185)
     task6EntryDate.place(x=370, y=210)
 
-    save_button.place(x=110, y=270)
-    exit_button.place(x=505, y=3)
+    exit_button.place(x=160, y=270)
 
 
 # Button to access edit function
 ImpDatesButton = tk.Button(text="Edit Important Dates", command=editButton, image=gear, borderwidth=0, highlightthickness=0)
 
-ImpDatesButton.place(x=85, y=30)
+ImpDatesButton.place(x=85, y=20)
 
 # Display without pressing edit   HAS ISSUES BECAUSE IT OVERLAPS EDITED DATA
 
@@ -418,16 +381,19 @@ def getImportantDates():
 
 
 def displayImportantDates():
-    footerBar.delete("text")  # deletes any previous values displayed in the footer
 
     data = getImportantDates()
-    footerBar.create_text(100, 40, text=data["task1"]["task"], font=("Helvetica", 20), fill="white", anchor="w")  # rewrite to make it populate
-    footerBar.create_text(100, 100, text=data["task2"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-    footerBar.create_text(550, 160, text=data["task3"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
 
-    footerBar.create_text(550, 40, text=data["task4"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-    footerBar.create_text(1000, 100, text=data["task5"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-    footerBar.create_text(100, 160, text=data["task6"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+    footerBar.create_rectangle(0, 0, 1502 , 152, fill=MSU_Maroon) # Drawing over the old maroon rectangle
+    
+    footerBar.create_text(150, 40, text=data["task1"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+    footerBar.create_text(150, 110, text=data["task2"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+    
+    footerBar.create_text(650, 40, text=data["task3"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+    footerBar.create_text(650, 110, text=data["task4"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+    
+    footerBar.create_text(1100, 40, text=data["task5"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+    footerBar.create_text(1100, 110, text=data["task6"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
 
 
 displayImportantDates()
