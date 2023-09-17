@@ -1,12 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-import json
-import openpyxl
-import time
 import json, openpyxl, time
-
-start_time = time.time()
-
 
 start_time = time.time()
 
@@ -45,20 +39,14 @@ saveExit = ImageTk.PhotoImage(imageSaveExit)
 Logo_label = tk.Label(image=logo, borderwidth=0)
 Logo_label.image = logo
 
-#Placing Logo
+# Placing Logo
 
 Logolabel = tk.Label(image=logo, borderwidth=0)
 Logolabel.image = logo
 
-Logolabel.place(x= 400, y= 50)
-
-
-
-
-
+Logolabel.place(x=400, y=50)
 
 # Controls Column
-
 
 # For percentage bar, overlap an orange rectangle over a white one and adjust the x value
 
@@ -75,7 +63,7 @@ controls_canvas.create_text(165, 67, text="StatusBoard Coding Project", font=("A
 controls_canvas.create_rectangle(30, 80, 170, 100, fill="white") 
 controls_canvas.create_rectangle(30, 80, 120, 100, fill="orange") 
 
-controls_canvas.place(x=100,y=200)
+controls_canvas.place(x=100, y=200)
 
 
 # PowerTrain Column
@@ -102,7 +90,7 @@ driveTrain_canvas.place(x=600, y=200)
 
 # Suspension Column
 
-suspension_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
+suspension_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
 suspension_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
 
@@ -151,14 +139,11 @@ footerBar = tk.Canvas(root, width=1500, height=150, borderwidth=2, relief="groov
 footerBar.create_rectangle(0, 0, 1502, 152, fill=MSU_Maroon)
 
 
-footerBar.place(x= 250, y= 850)
-
-
+footerBar.place(x=250, y=850)
 
 # Important Dates Text
 label = tk.Label(root, text="Important Dates", font=('Arial', 55), bg="black", fg="white")
 label.place(x=715, y=760)
-
 
 
 def findLastProjectRow():
@@ -166,24 +151,16 @@ def findLastProjectRow():
     activeExcel = excelOpen.active
     for i in range(8, 500):
         cell_section = activeExcel.cell(row=i, column=1)
-
-
-def findLastProjectRow():
-    excelOpen = openpyxl.load_workbook('Master Schedule 2024.xlsx')
-    activeExcel = excelOpen.active
-    for i in range(8 , 500):
-        cell_section = activeExcel.cell(row = i, column = 1)
         if (cell_section.value == None):
             break
     return i
-
 
 
 # there is a crash if there is a space after a section name
 # there are several possible ways to fix this, but I don't know how this function works to fix it.
 # also it seems to only get the system name for the project name, wouldn't it make more sense to get more information?
 # it probably should get some combination of the system name, phase, part, and the person assigned to it.
-# ex. System name, part, phase = Steering, Wheel, Design  or  Floorplate, Mold, Manufacture
+# ex. System name, part, phase = Steering, Wheel, Design  or  Floor plate, Mold, Manufacture
 # These examples while longer give a good idea of what is being done rather than the steering or floorplate that would display currently
 
 
@@ -209,8 +186,6 @@ def pullDataFromExcel():
     return projects
 
 
-
-
 def dumpProjectData2JSON():
     projectData = pullDataFromExcel()
     with open('excelData.json', 'w') as json_file:
@@ -219,11 +194,8 @@ def dumpProjectData2JSON():
         json_file.close
         # ^ this doesn't seem to do anything according to pycharm
 
-
-
-
-#Button that calls edit function for important Dates (CONTAINS MANY FUNCTIONS TO READ AND WRITE TO JSON AND TO DISPLAY DATES)
-
+# Button that calls edit function for important Dates
+# (CONTAINS MANY FUNCTIONS TO READ AND WRITE TO JSON AND TO DISPLAY DATES)
 
 
 def editButton():
@@ -295,33 +267,7 @@ def editButton():
 
             # ^ this doesn't seem to do anything according to pycharm
 
-
-    #reads the data that was put into important_dates and returns the data in the form of a dictionary
-    
-    def getImportantDates():
-        with open("important_dates.json", "r") as json_file:
-            importantDataList = json.load(json_file)
-            json_file.close
-        return importantDataList
-
-
-    # places the data from the dictionary into displayable text
-    
-    def displayImportantDates():
-
-        data = getImportantDates()
-
-        footerBar.create_rectangle(0, 0, 1502 , 152, fill=MSU_Maroon) # Drawing over the old maroon rectangle
-    
-        footerBar.create_text(150, 40, text=data["task1"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-        footerBar.create_text(150, 110, text=data["task2"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-    
-        footerBar.create_text(650, 40, text=data["task3"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-        footerBar.create_text(650, 110, text=data["task4"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-    
-        footerBar.create_text(1100, 40, text=data["task5"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-        footerBar.create_text(1100, 110, text=data["task6"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-
+    # reads the data that was put into important_dates and returns the data in the form of a dictionary
 
     # will update the data on closure of the edit window
     def exit_editButton():
@@ -329,8 +275,8 @@ def editButton():
         displayImportantDates()
         edit_window.destroy()
 
-    #save_button = tk.Button(edit_window, text="Save", image=saveButton, borderwidth=0, highlightthickness=0, command=setImportantDates)
-    exit_button = tk.Button(edit_window, text="Exit", command=exit_editButton, image = saveExit, borderwidth=0, highlightthickness=0)
+    # save_button = tk.Button(edit_window, text="Save", image=saveButton, borderwidth=0, highlightthickness=0, command=setImportantDates)
+    exit_button = tk.Button(edit_window, text="Exit", command=exit_editButton, image=saveExit, borderwidth=0, highlightthickness=0)
 
     # Placing text boxes for important dates entry
     task1.place(x=60, y=10)
@@ -380,7 +326,7 @@ def displayImportantDates():
 
     data = getImportantDates()
 
-    footerBar.create_rectangle(0, 0, 1502 , 152, fill=MSU_Maroon) # Drawing over the old maroon rectangle
+    footerBar.create_rectangle(0, 0, 1502, 152, fill=MSU_Maroon)  # Drawing over the old maroon rectangle
     
     footerBar.create_text(150, 40, text=data["task1"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
     footerBar.create_text(150, 110, text=data["task2"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
