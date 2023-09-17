@@ -1,10 +1,14 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+import json
+import openpyxl
+import time
 import json, openpyxl, time
 
 start_time = time.time()
 
 
+start_time = time.time()
 
 root = tk.Tk()
 
@@ -19,12 +23,11 @@ MSU_Maroon = "#5D1725"
 
 # Images stored ↓↓↓↓
 
-
 imageLogo = Image.open("StatusBoardLogo.png")
 logo = ImageTk.PhotoImage(imageLogo)
 
 imageGear = Image.open("gearIcon.png")
-gear = ImageTk.PhotoImage(imageGear, width = 20, height = 20)
+gear = ImageTk.PhotoImage(imageGear, width=20, height=20)
 
 imageExit = Image.open("redX.png")
 redX = ImageTk.PhotoImage(imageExit)
@@ -34,6 +37,11 @@ saveButton = ImageTk.PhotoImage(imageSave)
 
 imageExitMaroon = Image.open("maroonX.png")
 maroonX = ImageTk.PhotoImage(imageExitMaroon)
+
+
+# Placing Logo
+Logo_label = tk.Label(image=logo, borderwidth=0)
+Logo_label.image = logo
 
 #Placing Logo
 
@@ -51,16 +59,28 @@ Logolabel.place(x= 400, y= 50)
 # Controls Collumn
 
 
+Logo_label.place(x=400, y=50)
+
+# Controls Column
 # For percentage bar, overlap an orange rectangle over a white one and adjust the x value
+
+
+controls_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
+controls_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
 ctrl_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
 ctrl_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
-ctrl_canvas.create_text(100, 25, text="Controls", font=("Arial", 20), fill="white")
 
-ctrl_canvas.create_text(165, 67, text="StatusBoard Coding Project", font=("Arial", 8), fill="white", anchor='e')
+controls_canvas.create_text(100, 25, text="Controls", font=("Arial", 20), fill="white")
+
+controls_canvas.create_text(165, 67, text="StatusBoard Coding Project", font=("Arial", 8), fill="white", anchor='e')
 
 # percentage bar  ↓↓↓↓
+
+controls_canvas.create_rectangle(30, 80, 170, 100, fill="white")  # keep static
+controls_canvas.create_rectangle(30, 80, 120, 100, fill="orange")
+
 ctrl_canvas.create_rectangle(30, 80, 170, 100, fill="white") # keep static
 ctrl_canvas.create_rectangle(30, 80, 120, 100, fill="orange")
 
@@ -72,31 +92,51 @@ ctrl_canvas.place(x=100,y=200)
 pwT_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
 pwT_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
 
-pwT_canvas.create_text(100, 25, text="PowerTrain", font=("Arial", 20), fill="white")
+
+controls_canvas.place(x=100, y=200)
+
+# PowerTrain Column
+
+powerTrain_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
+powerTrain_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
+
+powerTrain_canvas.create_text(100, 25, text="PowerTrain", font=("Arial", 20), fill="white")
 
 
-pwT_canvas.place(x=350,y=200)
-
-# Drivetrain Collumn
+powerTrain_canvas.place(x=350, y=200)
 
 drT_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
 drT_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
 
-drT_canvas.create_text(100, 25, text="DriveTrain", font=("Arial", 20), fill="white")
+
+# Drivetrain Column
+
+driveTrain_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
+driveTrain_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
+
+driveTrain_canvas.create_text(100, 25, text="DriveTrain", font=("Arial", 20), fill="white")
+
+driveTrain_canvas.place(x=600, y=200)
 
 
-drT_canvas.place(x=600,y=200)
-
-# Suspension Collumn
+# Suspension Column
 
 sus_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
 sus_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
 
-sus_canvas.create_text(100, 25, text="Suspension", font=("Arial", 20), fill="white")
 
-sus_canvas.place(x=850,y=200)
+suspension_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
+suspension_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
 
-# Chasis Collumn
+suspension_canvas.create_text(100, 25, text="Suspension", font=("Arial", 20), fill="white")
+
+suspension_canvas.place(x=850, y=200)
+
+
+# Chassis Column
+
+chassis_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
+chassis_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
 
 chas_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
 chas_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
@@ -104,30 +144,46 @@ chas_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
 chas_canvas.create_text(100, 25, text="Chassis", font=("Arial", 20), fill="white")
 
 
-chas_canvas.place(x=1100,y=200)
+chassis_canvas.create_text(100, 25, text="Chassis", font=("Arial", 20), fill="white")
 
-# Electrical Collumn
+chassis_canvas.place(x=1100, y=200)
+
+# Electrical Column
+
+
+electrical_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
+electrical_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
 
 elec_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
 elec_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
 
-elec_canvas.create_text(100, 25, text="Electrical", font=("Arial", 20), fill="white")
+
+electrical_canvas.create_text(100, 25, text="Electrical", font=("Arial", 20), fill="white")
 
 
-elec_canvas.place(x=1350,y=200)
+electrical_canvas.place(x=1350, y=200)
+
+
+# Aero Column
+aero_canvas = tk.Canvas(root, width=200, height=500, borderwidth=2, relief="raised")
 
 # Aero Collumn
 
 aero_canvas = tk.Canvas(root, width=200, height=500, borderwidth = 2, relief="raised")
+
 aero_canvas.create_rectangle(0, 0, 300, 500, fill=MSU_Maroon)
 
 aero_canvas.create_text(100, 25, text="Aero", font=("Arial", 20), fill="white")
 
+aero_canvas.place(x=1600, y=200)
 
-aero_canvas.place(x=1600,y=200)
+# Bottom Schedule
 
 
-#Bottom Schedule
+footerBar = tk.Canvas(root, width=1500, height=150, borderwidth=2, relief="groove")
+footerBar.create_rectangle(0, 0, 1502, 152, fill=MSU_Maroon)
+
+footerBar.place(x=250, y=850)
 
 footerBar = tk.Canvas(root, width= 1500, height = 150, borderwidth = 2, relief="groove" )
 footerBar.create_rectangle(0, 0, 1502 , 152, fill=MSU_Maroon)
@@ -135,11 +191,18 @@ footerBar.create_rectangle(0, 0, 1502 , 152, fill=MSU_Maroon)
 footerBar.place(x= 250, y= 850)
 
 
-# Important Dates Text
 
+# Important Dates Text
 label = tk.Label(root, text="Important Dates", font=('Arial', 55), bg="black", fg="white")
 label.place(x=720, y=750)
 
+
+
+def findLastProjectRow():
+    excelOpen = openpyxl.load_workbook('Master Schedule 2024.xlsx')
+    activeExcel = excelOpen.active
+    for i in range(8, 500):
+        cell_section = activeExcel.cell(row=i, column=1)
 
 
 def findLastProjectRow():
@@ -152,10 +215,36 @@ def findLastProjectRow():
     return i
 
 
+
+# there is a crash if there is a space after a section name
+# there are several possible ways to fix this, but I don't know how this function works to fix it.
+# also it seems to only get the system name for the project name, wouldn't it make more sense to get more information?
+# it probably should get some combination of the system name, phase, part, and the person assigned to it.
+# ex. System name, part, phase = Steering, Wheel, Design  or  Floorplate, Mold, Manufacture
+# These examples while longer give a good idea of what is being done rather than the steering or floorplate that would display currently
+
+
 def pullDataFromExcel():
     excelOpen = openpyxl.load_workbook('Master Schedule 2024.xlsx')
     activeExcel = excelOpen.active
     max_row = findLastProjectRow()
+
+    projects = {"Controls": [], "Drivetrain":  [], "Powertrain": [], "Suspension": [], "Chassis": [], "Electrical": [], "Aerodynamics": []}
+    for i in range(8, max_row):
+        cell_section = activeExcel.cell(row=i, column=1)
+        cell_percentage = activeExcel.cell(row=i, column=6)
+        cell_date = activeExcel.cell(row=i, column=8)
+        cell_system = activeExcel.cell(row=i, column=2)
+
+        # removed cell_percentage.value != 0 because it causes the json to be super empty
+        # it would make more sense to check the start date to see if the project should be started which is column G in Excel
+        # which could use the unused cell_date for a more accurate list of what needs to be started
+        if cell_percentage.value != 1 and cell_section.value != "Business":
+            projects[cell_section.value].append({"projectname": cell_system.value, "percent": cell_percentage.value})
+
+    excelOpen.close()  # This was behind the return function this should be here if you want it to run.
+    return projects
+=======
     projects = { "Controls" : [], "Drivetrain" :  [], "Powertrain" : [], "Suspension" : [], "Chassis" : [], "Electrical" : [], "Aerodynamics" : []}
     for i in range(8, max_row):
         cell_section = activeExcel.cell(row = i, column = 1)
@@ -171,9 +260,19 @@ def pullDataFromExcel():
 
 
 
+
 def dumpProjectData2JSON():
     projectData = pullDataFromExcel()
     with open('excelData.json', 'w') as json_file:
+
+        json.dump(projectData, json_file)
+        json_file.close
+        # ^ this doesn't seem to do anything according to pycharm
+
+
+# Button that calls edit function for important Dates
+# #(CONTAINS MANY FUNCTIONS TO READ AND WRITE TO JSON AND TO DISPLAY DATES)
+
                 json.dump(projectData, json_file)
                 json_file.close
 
@@ -181,6 +280,7 @@ def dumpProjectData2JSON():
 
 
 #Button that calls edit function for important Dates (CONTAINS MANY FUNCTIONS TO READ AND WRITE TO JSON AND TO DISPLAY DATES)
+
 
 
 def editButton():
@@ -250,6 +350,9 @@ def editButton():
             json.dump(data, json_file)
             json_file.close
 
+            # ^ this doesn't seem to do anything according to pycharm
+
+
     #reads the data that was put into important_dates and returns the data in the form of a dictionary
     
     def getImportantDates():
@@ -273,90 +376,82 @@ def editButton():
         footerBar.create_text(1000, 100, text=data["task5"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
         footerBar.create_text(100, 160, text=data["task6"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
 
+
     # will update the data on closure of the edit window
-    
-    
     def exit_editButton():
         displayImportantDates()
         edit_window.destroy()
 
-    
-    save_button = tk.Button(edit_window, text="Save",image=saveButton, borderwidth=0, highlightthickness=0, command=setImportantDates)
+    save_button = tk.Button(edit_window, text="Save", image=saveButton, borderwidth=0, highlightthickness=0, command=setImportantDates)
     exit_button = tk.Button(edit_window, text="Exit", command=exit_editButton, image = maroonX, borderwidth=0, highlightthickness=0)
+
+    # Placing text boxes for important dates entry
+    task1.place(x=60, y=10)
+    task1Entry.place(x=50, y=35)
+    task1EntryDate.place(x=50, y=60)
     
-    #Placing textboxes for important dates entry
-    task1.place(x= 60, y= 10)
-    task1Entry.place(x= 50, y= 35)
-    task1EntryDate.place(x= 50, y=60)
-    
-    task2.place(x= 60, y= 85)
-    task2Entry.place(x= 50, y= 110)
-    task2EntryDate.place(x= 50, y= 135)
+    task2.place(x=60, y=85)
+    task2Entry.place(x=50, y=110)
+    task2EntryDate.place(x=50, y=135)
 
-    task3.place(x= 60, y= 160)
-    task3Entry.place(x= 50, y= 185)
-    task3EntryDate.place(x= 50, y= 210)
+    task3.place(x=60, y=160)
+    task3Entry.place(x=50, y=185)
+    task3EntryDate.place(x=50, y=210)
 
-    task4.place(x= 380, y= 10)
-    task4Entry.place(x= 370, y= 35)
-    task4EntryDate.place(x= 370, y= 60)
+    task4.place(x=380, y=10)
+    task4Entry.place(x=370, y=35)
+    task4EntryDate.place(x=370, y=60)
 
-    task5.place(x= 380, y= 85)
-    task5Entry.place(x= 370, y= 110)
-    task5EntryDate.place(x= 370, y= 135)
+    task5.place(x=380, y=85)
+    task5Entry.place(x=370, y=110)
+    task5EntryDate.place(x=370, y=135)
 
-    task6.place(x= 380, y= 160)
-    task6Entry.place(x= 370, y= 185)
-    task6EntryDate.place(x= 370, y= 210)
+    task6.place(x=380, y=160)
+    task6Entry.place(x=370, y=185)
+    task6EntryDate.place(x=370, y=210)
 
-    save_button.place(x= 110, y= 270)
-    exit_button.place(x= 505, y= 3)
+    save_button.place(x=110, y=270)
+    exit_button.place(x=505, y=3)
 
 
+# Button to access edit function
+ImpDatesButton = tk.Button(text="Edit Important Dates", command=editButton, image=gear, borderwidth=0, highlightthickness=0)
 
+ImpDatesButton.place(x=85, y=30)
 
+# Display without pressing edit   HAS ISSUES BECAUSE IT OVERLAPS EDITED DATA
 
-
-
-# Button to access edit function 
-
-
-ImpDatesButton = tk.Button(text="Edit Important Dates", command = editButton, image=gear, borderwidth=0, highlightthickness=0)
-
-ImpDatesButton.place(x = 85, y = 30)
-
-# Display without pressing edit   HAS ISSUES BECUASE IT OVERLAPS EDITTED DATA
 
 def getImportantDates():
-        with open("important_dates.json", "r") as json_file:
-            importantDataList = json.load(json_file)
-            json_file.close
-        return importantDataList
+    with open("important_dates.json", "r") as json_file:
+        importantDataList = json.load(json_file)
+        json_file.close
+        # ^ this doesn't seem to do anything according to pycharm
+    return importantDataList
 
 
 def displayImportantDates():
-    footerBar.delete("text") # deletes any previous values displayed in the footer
+    footerBar.delete("text")  # deletes any previous values displayed in the footer
 
     data = getImportantDates()
-    for i in range(3):
-        footerBar.create_text(150, 40, text=data["task1"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-        footerBar.create_text(150, 100, text=data["task2"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-        footerBar.create_text(150, 160, text=data["task3"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-        for i in range(3):
-            footerBar.create_text(600, 40, text=data["task4"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-            footerBar.create_text(600, 100, text=data["task5"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
-            footerBar.create_text(600, 160, text=data["task6"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+    footerBar.create_text(100, 40, text=data["task1"]["task"], font=("Helvetica", 20), fill="white", anchor="w")  # rewrite to make it populate
+    footerBar.create_text(100, 100, text=data["task2"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+    footerBar.create_text(550, 160, text=data["task3"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+
+    footerBar.create_text(550, 40, text=data["task4"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+    footerBar.create_text(1000, 100, text=data["task5"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
+    footerBar.create_text(100, 160, text=data["task6"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
 
 
 displayImportantDates()
 
 # Exit button for entire program
 
-ExitButton = tk.Button(text="Exit", command=root.destroy, image = redX, borderwidth=0, highlightthickness=0)
+ExitButton = tk.Button(text="Exit", command=root.destroy, image=redX, borderwidth=0, highlightthickness=0)
 
-ExitButton.place(x=1830, y= 30)
+ExitButton.place(x=1830, y=30)
 
-
+print("--- %s seconds ---" % (time.time() - start_time))
 
 
 print("--- %s seconds ---" % (time.time() - start_time))
