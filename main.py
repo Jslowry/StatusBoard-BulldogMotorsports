@@ -3,11 +3,12 @@ from PIL import Image, ImageTk
 import json 
 import openpyxl 
 import time
+from datetime import date
 
 start_time = time.time()
 
 
-start_time = time.time()
+# start_time = time.time()
 
 root = tk.Tk()
 
@@ -44,15 +45,12 @@ saveExit = ImageTk.PhotoImage(imageSaveExit)
 Logo_label = tk.Label(image=logo, borderwidth=0)
 Logo_label.image = logo
 
-Logo_label.place(x= 400, y= 50)
+Logo_label.place(x=400, y=50)
 
 
-# Populate Collumn 
-
-
+# Populate Column
 
 # Controls Column
-
 
 # For percentage bar, overlap an orange rectangle over a white one and adjust the x value
 
@@ -62,14 +60,14 @@ controls_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
 controls_canvas.create_text(100, 25, text="Controls", font=("Arial", 25), fill="white")
 
-#controls_canvas.create_text(165, 67, text="StatusBoard Coding Project", font=("Arial", 8), fill="white", anchor='e')
+# controls_canvas.create_text(165, 67, text="StatusBoard Coding Project", font=("Arial", 8), fill="white", anchor='e')
 
 # percentage bar  ↓↓↓↓
 
-#controls_canvas.create_rectangle(30, 80, 170, 100, fill="white") 
-#controls_canvas.create_rectangle(30, 80, 120, 100, fill="orange") 
+# controls_canvas.create_rectangle(30, 80, 170, 100, fill="white")
+# controls_canvas.create_rectangle(30, 80, 120, 100, fill="orange")
 
-controls_canvas.place(x=100,y=200)
+controls_canvas.place(x=100, y=200)
 
 
 # PowerTrain Column
@@ -96,7 +94,7 @@ driveTrain_canvas.place(x=600, y=200)
 
 # Suspension Column
 
-suspension_canvas = tk.Canvas(root, width=200, height=550, borderwidth = 2, relief="raised")
+suspension_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
 suspension_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
 
@@ -138,6 +136,7 @@ aero_canvas.create_text(100, 25, text="Aero", font=("Arial", 25), fill="white")
 
 aero_canvas.place(x=1600, y=200)
 
+
 # Bottom Schedule
 
 
@@ -145,8 +144,7 @@ footerBar = tk.Canvas(root, width=1500, height=150, borderwidth=2, relief="groov
 footerBar.create_rectangle(0, 0, 1502, 152, fill=MSU_Maroon)
 
 
-footerBar.place(x= 250, y= 850)
-
+footerBar.place(x=250, y=850)
 
 
 # Important Dates Text
@@ -157,64 +155,64 @@ label.place(x=715, y=760)
 def findLastProjectRow():
     excelOpen = openpyxl.load_workbook('Master Schedule 2024.xlsx')
     activeExcel = excelOpen.active
-    for i in range(8 , 500):
-        cell_section = activeExcel.cell(row = i, column = 1)
-        if (cell_section.value == None):
+    for i in range(8, 500):
+        cell_section = activeExcel.cell(row=i, column=1)
+        if cell_section.value is None:
             break
     return i
-
 
 
 # there is a crash if there is a space after a section name
 # there are several possible ways to fix this, but I don't know how this function works to fix it.
 # also it seems to only get the system name for the project name, wouldn't it make more sense to get more information?
 # it probably should get some combination of the system name, phase, part, and the person assigned to it.
-# ex. System name, part, phase = Steering, Wheel, Design  or  Floorplate, Mold, Manufacture
-# These examples while longer give a good idea of what is being done rather than the steering or floorplate that would display currently
-
+# ex. System name, part, phase = Steering, Wheel, Design  or  Floor plate, Mold, Manufacture
+# These examples while longer give a good idea of what is being done
+# rather than the steering or floor plate that would display currently
 
 def pullDataFromExcel():
-    # write a with open json.dump() data function in here so we can get some fresh data on boot up 
+    # write a with open json.dump() data function in here, so we can get some fresh data on boot up
     excelOpen = openpyxl.load_workbook('Master Schedule 2024.xlsx')
     activeExcel = excelOpen.active
-    max_row = findLastProjectRow()
+    max_row = findLastProjectRow()  # Where Function?
 
     projects = {"Controls": [], "Drivetrain":  [], "Powertrain": [], "Suspension": [], "Chassis": [], "Electrical": [], "Aerodynamics": []}
     for i in range(8, max_row):
         cell_section = activeExcel.cell(row=i, column=1)
         cell_percentage = activeExcel.cell(row=i, column=6)
-        cell_date = activeExcel.cell(row=i, column=8)
+        # cell_date = activeExcel.cell(row=i, column=7)
         cell_system = activeExcel.cell(row=i, column=2)
-
+        """
+        today = date.today()  # datetime.date Datatype
+        # print(type(activeExcel.cell(row=i, column=7)))  # <class 'openpyxl.cell.cell.Cell'>
+        print(activeExcel.cell(row=i, column=7).get_time_format)
+        print(type(activeExcel.cell(row=i, column=7).get_time_format))
+        """
         section_value = cell_section.value
         cell_section = section_value.strip()
 
         # removed cell_percentage.value != 0 because it causes the json to be super empty
-        # it would make more sense to check the start date to see if the project should be started which is column G in Excel
+        # it would make more sense to check the start date to see if the project should be
+        # started which is column G in Excel
         # which could use the unused cell_date for a more accurate list of what needs to be started
-        if cell_percentage != 1 and cell_section != "Business":
+        if cell_percentage.value != 1.0 and cell_section != "Business":
             projects[cell_section].append({"projectname": cell_system.value, "percent": cell_percentage.value})
 
     excelOpen.close()  # This was behind the return function this should be here if you want it to run.
     return projects
 
 
-
 def dumpProjectData2JSON():
     projectData = pullDataFromExcel()
     with open('excelData.json', 'w') as json_file:
-
         json.dump(projectData, json_file)
-        json_file.close
-        # ^ this doesn't seem to do anything according to pycharm
 
-
-dumpProjectData2JSON()
 
 def getProjectData():
     with open('excelData.json', 'r') as json_file:
         projectData = json.load(json_file)
     return projectData
+
 
 def displayControlsData():
     projectData = getProjectData()
@@ -222,20 +220,120 @@ def displayControlsData():
     g = 0
 
     for i in range(7):
-        controls_canvas.create_text(140, 75 + g, text=projectData["Controls"][i]["projectname"], font=("Arial", 8), fill="white", anchor='e')
+        controls_canvas.create_text(30, 75 + g, text=projectData["Controls"][i]["projectname"], font=("Arial", 8), fill="white", anchor='w')
+        controls_canvas.create_text(30, 98 + g, text=f'{int(projectData["Controls"][i]["percent"] * 100)}%', font=("Arial", 8), fill="white", anchor='e')
         percentage = projectData["Controls"][i]["percent"]
-        controls_canvas.create_rectangle(30 , 88 + g, 170, 108 + g, fill="white") 
-        if (percentage == 0.00):
-            controls_canvas.create_rectangle(30, 88 + g, 30, 108 + g, fill="orange") #spghet
-            continue
+        controls_canvas.create_rectangle(30, 88 + g, 170, 108 + g, fill="white")
+        if percentage == 0.00:
+            controls_canvas.create_rectangle(30, 88 + g, 30, 108 + g, fill="orange")
+        else:
+            controls_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="orange")
         g += 70
 
-displayControlsData()
 
-# 
+def displayPowerTrainData():
+    projectData = getProjectData()
 
-#Button that calls edit function for important Dates (CONTAINS MANY FUNCTIONS TO READ AND WRITE TO JSON AND TO DISPLAY DATES)
+    g = 0
 
+    for i in range(7):
+        powerTrain_canvas.create_text(30, 75 + g, text=projectData["Powertrain"][i]["projectname"], font=("Arial", 8), fill="white", anchor='w')
+        powerTrain_canvas.create_text(30, 98 + g, text=f'{int(projectData["Powertrain"][i]["percent"] * 100)}%', font=("Arial", 8), fill="white", anchor='e')
+        percentage = projectData["Powertrain"][i]["percent"]
+        powerTrain_canvas.create_rectangle(30, 88 + g, 170, 108 + g, fill="white")
+        if percentage == 0.00:
+            powerTrain_canvas.create_rectangle(30, 88 + g, 30, 108 + g, fill="orange")
+        else:
+            powerTrain_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="orange")
+        g += 70
+
+
+def displayDriveTrainData():
+    projectData = getProjectData()
+
+    g = 0
+
+    for i in range(7):
+        driveTrain_canvas.create_text(30, 75 + g, text=projectData["Drivetrain"][i]["projectname"], font=("Arial", 8), fill="white", anchor='w')
+        driveTrain_canvas.create_text(30, 98 + g, text=f'{int(projectData["Drivetrain"][i]["percent"] * 100)}%', font=("Arial", 8), fill="white", anchor='e')
+        percentage = projectData["Drivetrain"][i]["percent"]
+        driveTrain_canvas.create_rectangle(30, 88 + g, 170, 108 + g, fill="white")
+        if percentage == 0.00:
+            driveTrain_canvas.create_rectangle(30, 88 + g, 30, 108 + g, fill="orange")
+        else:
+            driveTrain_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="orange")
+        g += 70
+
+
+def displaySuspensionData():
+    projectData = getProjectData()
+
+    g = 0
+
+    for i in range(7):
+        suspension_canvas.create_text(30, 75 + g, text=projectData["Suspension"][i]["projectname"], font=("Arial", 8), fill="white", anchor='w')
+        suspension_canvas.create_text(30, 98 + g, text=f'{int(projectData["Suspension"][i]["percent"] * 100)}%', font=("Arial", 8), fill="white", anchor='e')
+        percentage = projectData["Suspension"][i]["percent"]
+        suspension_canvas.create_rectangle(30, 88 + g, 170, 108 + g, fill="white")
+        if percentage == 0.00:
+            suspension_canvas.create_rectangle(30, 88 + g, 30, 108 + g, fill="orange")
+        else:
+            suspension_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="orange")
+        g += 70
+
+
+def displayChassisData():
+    projectData = getProjectData()
+
+    g = 0
+
+    for i in range(7):
+        chassis_canvas.create_text(30, 75 + g, text=projectData["Chassis"][i]["projectname"], font=("Arial", 8), fill="white", anchor='w')
+        chassis_canvas.create_text(30, 98 + g, text=f'{int(projectData["Chassis"][i]["percent"] * 100)}%', font=("Arial", 8), fill="white", anchor='e')
+        percentage = projectData["Chassis"][i]["percent"]
+        chassis_canvas.create_rectangle(30, 88 + g, 170, 108 + g, fill="white")
+        if percentage == 0.00:
+            chassis_canvas.create_rectangle(30, 88 + g, 30, 108 + g, fill="orange")
+        else:
+            chassis_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="orange")
+        g += 70
+
+
+def displayElectricalData():
+    projectData = getProjectData()
+
+    g = 0
+
+    for i in range(7):
+        electrical_canvas.create_text(30, 75 + g, text=projectData["Electrical"][i]["projectname"], font=("Arial", 8), fill="white", anchor='w')
+        electrical_canvas.create_text(30, 98 + g, text=f'{int(projectData["Electrical"][i]["percent"] * 100)}%', font=("Arial", 8), fill="white", anchor='e')
+        percentage = projectData["Electrical"][i]["percent"]
+        electrical_canvas.create_rectangle(30, 88 + g, 170, 108 + g, fill="white")
+        if percentage == 0.00:
+            electrical_canvas.create_rectangle(30, 88 + g, 30, 108 + g, fill="orange")
+        else:
+            electrical_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="orange")
+        g += 70
+
+
+def displayAeroData():
+    projectData = getProjectData()
+
+    g = 0
+
+    for i in range(7):
+        aero_canvas.create_text(30, 75 + g, text=projectData["Aerodynamics"][i]["projectname"], font=("Arial", 8), fill="white", anchor='w')
+        aero_canvas.create_text(30, 98 + g, text=f'{int(projectData["Aerodynamics"][i]["percent"] * 100)}%', font=("Arial", 8), fill="white", anchor='e')
+        percentage = projectData["Aerodynamics"][i]["percent"]
+        aero_canvas.create_rectangle(30, 88 + g, 170, 108 + g, fill="white")
+        if percentage == 0.00:
+            aero_canvas.create_rectangle(30, 88 + g, 30, 108 + g, fill="orange")
+        else:
+            aero_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="orange")
+        g += 70
+
+# Button that calls edit function for important Dates (CONTAINS MANY FUNCTIONS TO
+# READ AND WRITE TO JSON AND TO DISPLAY DATES)
 
 
 def editButton():
@@ -303,23 +401,10 @@ def editButton():
         # writes it to important_dates.json
         with open("important_dates.json", "w") as json_file:
             json.dump(data, json_file)
-            json_file.close
 
-            # ^ this doesn't seem to do anything according to pycharm
-
-
-    #reads the data that was put into important_dates and returns the data in the form of a dictionary
-    
-    def getImportantDates():
-        with open("important_dates.json", "r") as json_file:
-            importantDataList = json.load(json_file)
-            json_file.close
-        return importantDataList
-
+    # reads the data that was put into important_dates and returns the data in the form of a dictionary
 
     # places the data from the dictionary into displayable text
-    
-
 
     # will update the data on closure of the edit window
     def exit_editButton():
@@ -327,8 +412,8 @@ def editButton():
         displayImportantDates()
         edit_window.destroy()
 
-    #save_button = tk.Button(edit_window, text="Save", image=saveButton, borderwidth=0, highlightthickness=0, command=setImportantDates)
-    exit_button = tk.Button(edit_window, text="Exit", command=exit_editButton, image = saveExit, borderwidth=0, highlightthickness=0)
+    # save_button = tk.Button(edit_window, text="Save", image=saveButton, borderwidth=0, highlightthickness=0, command=setImportantDates)
+    exit_button = tk.Button(edit_window, text="Exit", command=exit_editButton, image=saveExit, borderwidth=0, highlightthickness=0)
 
     # Placing text boxes for important dates entry
     task1.place(x=60, y=10)
@@ -369,8 +454,6 @@ ImpDatesButton.place(x=85, y=20)
 def getImportantDates():
     with open("important_dates.json", "r") as json_file:
         importantDataList = json.load(json_file)
-        json_file.close
-        # ^ this doesn't seem to do anything according to pycharm
     return importantDataList
 
 
@@ -378,7 +461,7 @@ def displayImportantDates():
 
     data = getImportantDates()
 
-    footerBar.create_rectangle(0, 0, 1502 , 152, fill=MSU_Maroon) # Drawing over the old maroon rectangle
+    footerBar.create_rectangle(0, 0, 1502, 152, fill=MSU_Maroon)  # Drawing over the old maroon rectangle
     
     footerBar.create_text(150, 40, text=data["task1"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
     footerBar.create_text(150, 110, text=data["task2"]["task"], font=("Helvetica", 20), fill="white", anchor="w")
@@ -391,6 +474,16 @@ def displayImportantDates():
 
 
 displayImportantDates()
+
+dumpProjectData2JSON()
+
+displayControlsData()
+displayPowerTrainData()
+displayDriveTrainData()
+displaySuspensionData()
+displayChassisData()
+displayElectricalData()
+displayAeroData()
 
 # Exit button for entire program
 
