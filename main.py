@@ -1,14 +1,15 @@
 import tkinter as tk
+from tkinter import *
 from PIL import Image, ImageTk
 import json 
 import openpyxl 
 import time
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
+from downloadExcel import updateExcelFile
+
 
 start_time = time.time()
 
-
-# start_time = time.time()
 
 root = tk.Tk()
 
@@ -42,14 +43,18 @@ imageSaveExit = Image.open("save and exit.png")
 saveExit = ImageTk.PhotoImage(imageSaveExit)
 
 
+# Update's Excel File
+
+updateExcelFile()
+
 
 # Placing Logo
+
+
 Logo_label = tk.Label(image=logo, borderwidth=0)
 Logo_label.image = logo
 
 Logo_label.place(x=400, y=50)
-
-
 
 
 # Controls Column
@@ -58,18 +63,18 @@ controls_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="
 controls_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
 
-controls_canvas.create_text(100, 25, text="Controls", font=("Arial", 25), fill="white")
+controls_canvas.create_text(100, 25, text="Controls", font=("Arial", 27), fill="white")
 
 controls_canvas.place(x=100, y=200)
 
 
 # PowerTrain Column
-
+  
 powerTrain_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
 powerTrain_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
 
-powerTrain_canvas.create_text(100, 25, text="PowerTrain", font=("Arial", 25), fill="white")
+powerTrain_canvas.create_text(100, 25, text="PowerTrain", font=("Arial", 27), fill="white")
 
 powerTrain_canvas.place(x=350, y=200)
 
@@ -80,7 +85,7 @@ driveTrain_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief
 driveTrain_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
 
-driveTrain_canvas.create_text(100, 25, text="DriveTrain", font=("Arial", 25), fill="white")
+driveTrain_canvas.create_text(100, 25, text="DriveTrain", font=("Arial", 27), fill="white")
 
 driveTrain_canvas.place(x=600, y=200)
 
@@ -91,7 +96,7 @@ suspension_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief
 suspension_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
 
-suspension_canvas.create_text(100, 25, text="Suspension", font=("Arial", 25), fill="white")
+suspension_canvas.create_text(100, 25, text="Suspension", font=("Arial", 27), fill="white")
 
 suspension_canvas.place(x=850, y=200)
 
@@ -102,7 +107,7 @@ chassis_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="r
 chassis_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
 
 
-chassis_canvas.create_text(100, 25, text="Chassis", font=("Arial", 25), fill="white")
+chassis_canvas.create_text(100, 25, text="Chassis", font=("Arial", 27), fill="white")
 
 chassis_canvas.place(x=1100, y=200)
 
@@ -129,6 +134,8 @@ aero_canvas.create_text(100, 25, text="Aero", font=("Arial", 25), fill="white")
 aero_canvas.place(x=1600, y=200)
 
 
+
+
 # Bottom Schedule
 
 footerBar = tk.Canvas(root, width=1500, height=150, borderwidth=2, relief="groove")
@@ -144,23 +151,22 @@ label = tk.Label(root, text="Important Dates", font=('Arial', 55), bg="black", f
 label.place(x=715, y=760)
 
 
+
+#finds the last row of the excel file
+
 def findLastProjectRow():
     excelOpen = openpyxl.load_workbook('Master Schedule 2024.xlsx')
     activeExcel = excelOpen.active
-    for i in range(8, 500):
+    for i in range(72, 500):
         cell_section = activeExcel.cell(row=i, column=1)
         if cell_section.value is None:
             break
     return i
 
 
-# there is a crash if there is a space after a section name
-# there are several possible ways to fix this, but I don't know how this function works to fix it.
-# also it seems to only get the system name for the project name, wouldn't it make more sense to get more information?
-# it probably should get some combination of the system name, phase, part, and the person assigned to it.
-# ex. System name, part, phase = Steering, Wheel, Design  or  Floor plate, Mold, Manufacture
-# These examples while longer give a good idea of what is being done
-# rather than the steering or floor plate that would display currently
+
+
+# Populates the excelData file
 
 def pullDataFromExcel():
     excelOpen = openpyxl.load_workbook('Master Schedule 2024.xlsx')
@@ -168,12 +174,13 @@ def pullDataFromExcel():
     max_row = findLastProjectRow()
 
     projects = {"Controls": [], "Drivetrain":  [], "Powertrain": [], "Suspension": [], "Chassis": [], "Electrical": [], "Aerodynamics": []}
-    for i in range(8, max_row):
+    for i in range(72, findLastProjectRow()):
         cell_section = activeExcel.cell(row=i, column=1)
         cell_percentage = activeExcel.cell(row=i, column=6)
         cell_date = activeExcel.cell(row=i, column=8) # end date
         cell_system = activeExcel.cell(row=i, column=2)
         cell_details = activeExcel.cell(row=i, column=4)
+        cell_PartStage = activeExcel.cell(row=i, column =3)
 
         section_value = cell_section.value
         cell_section = section_value.strip()
@@ -184,13 +191,11 @@ def pullDataFromExcel():
         # which could use the unused cell_date for a more accurate list of what needs to be started
         if cell_percentage.value != 1.0 and cell_section != "Business":
             if cell_system.value == cell_details.value:
-                projects[cell_section].append({"projectname": cell_system.value, "percent": cell_percentage.value, "projectdetails": " ", "date": str(cell_date.value)})
+                projects[cell_section].append({"projectname": cell_system.value, "percent": cell_percentage.value, "projectdetails": " ", "date": str(cell_date.value), "Stage": cell_PartStage.value[0]})
             else:
-                projects[cell_section].append({"projectname": cell_system.value, "percent": cell_percentage.value, "projectdetails": cell_details.value, "date": str(cell_date.value)})
-
+                projects[cell_section].append({"projectname": cell_system.value, "percent": cell_percentage.value, "projectdetails": cell_details.value, "date": str(cell_date.value), "Stage": cell_PartStage.value[0]})
     excelOpen.close()
     return projects
-
 
 
 def dumpProjectData2JSON():
@@ -206,21 +211,29 @@ def getProjectData():
 
 def is_overdue(projectDate):
     date_format = '%Y-%m-%d'
-    
     projectDate = str(projectDate)
     SlicedProjectDate = projectDate[:10]
     SlicedProjectDate = datetime.strptime(SlicedProjectDate, date_format)
-    
     todays_date = str(date.today())
     SlicedTodaysDate = todays_date[:10]
     SlicedTodaysDate = datetime.strptime(SlicedTodaysDate, date_format)
-
-    if SlicedTodaysDate > SlicedProjectDate:
+    if SlicedTodaysDate > SlicedProjectDate + timedelta(days=30): # Change days for overdue limit
         return True 
     else:
         return False
+    
 
-
+def cutStringToLength(text):
+    sliced = ""
+    if(len(text)> 17): # if its oversized
+        for i in reversed(text): # start at end and go through 1 by 1
+            if i == " ": # if i's character == " " then 
+                break
+            sliced = i + sliced
+        return sliced
+    else: 
+        return text
+    
 
 # We can only display 33 characters in between projectname and project details
 def displayControlsData():
@@ -230,17 +243,17 @@ def displayControlsData():
 
     for i in range(7):
         text = f'{projectData["Controls"][i]["projectname"]} {projectData["Controls"][i]["projectdetails"]}'
-        limitText = text[:33]
-        controls_canvas.create_text(30, 75 + g, text=limitText, font=("Arial", 8), fill="white", anchor='w')
-        controls_canvas.create_text(30, 98 + g, text=f'{int(projectData["Controls"][i]["percent"] * 100)}%', font=("Arial", 8), fill="white", anchor='e')
+        limitText = f'{cutStringToLength(text)} ({projectData["Controls"][i]["Stage"]})'
+        controls_canvas.create_text(40, 75 + g, text=limitText, font=("Arial", 12), fill="white", anchor='w')
         percentage = projectData["Controls"][i]["percent"]
-        controls_canvas.create_rectangle(30, 88 + g, 170, 108 + g, fill="white")
+        controls_canvas.create_rectangle(40, 88 + g, 180, 108 + g, fill="white")
         if percentage == 0.00:
-            controls_canvas.create_rectangle(30, 88 + g, 30, 108 + g, fill="orange")
+            controls_canvas.create_rectangle(40, 88 + g, 40, 108 + g, fill="orange")
         elif is_overdue(projectData["Controls"][i]["date"]) and percentage != 0.00:
-            controls_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="red")
+            controls_canvas.create_rectangle(40, 88 + g, 40 + (140 * percentage), 108 + g, fill="red")
         else:
-            controls_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="orange")
+            controls_canvas.create_rectangle(40, 88 + g, 40 + (140 * percentage), 108 + g, fill="orange")
+        controls_canvas.create_text(130, 98 + g, text=f'{int(projectData["Controls"][i]["percent"] * 100)}%', font=("Arial bold", 12), fill="black", anchor='e')
         g += 70
 
 
@@ -251,17 +264,17 @@ def displayPowerTrainData():
 
     for i in range(7):
         text = f'{projectData["Powertrain"][i]["projectname"]} {projectData["Powertrain"][i]["projectdetails"]}'
-        limitText = text[:33]
-        powerTrain_canvas.create_text(30, 75 + g, text=limitText, font=("Arial", 8), fill="white", anchor='w')
-        powerTrain_canvas.create_text(30, 98 + g, text=f'{int(projectData["Powertrain"][i]["percent"] * 100)}%', font=("Arial", 8), fill="white", anchor='e')
+        limitText = f'{cutStringToLength(text)} ({projectData["Powertrain"][i]["Stage"]})'
+        powerTrain_canvas.create_text(40, 75 + g, text=limitText, font=("Arial", 12), fill="white", anchor='w')
         percentage = projectData["Powertrain"][i]["percent"]
-        powerTrain_canvas.create_rectangle(30, 88 + g, 170, 108 + g, fill="white")
+        powerTrain_canvas.create_rectangle(40, 88 + g, 180, 108 + g, fill="white")
         if percentage == 0.00:
-            powerTrain_canvas.create_rectangle(30, 88 + g, 30, 108 + g, fill="orange")
+            powerTrain_canvas.create_rectangle(40, 88 + g, 40, 108 + g, fill="orange")
         elif is_overdue(projectData["Powertrain"][i]["date"]) and percentage != 0.00:
-            powerTrain_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="red")
+            powerTrain_canvas.create_rectangle(40, 88 + g, 40 + (140 * percentage), 108 + g, fill="red")
         else:
-            powerTrain_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="orange")
+            powerTrain_canvas.create_rectangle(40, 88 + g, 40 + (140 * percentage), 108 + g, fill="orange")
+        powerTrain_canvas.create_text(130, 98 + g, text=f'{int(projectData["Powertrain"][i]["percent"] * 100)}%', font=("Arial bold", 12), fill="black", anchor='e')
         g += 70
 
 
@@ -272,17 +285,17 @@ def displayDriveTrainData():
 
     for i in range(7):
         text = f'{projectData["Drivetrain"][i]["projectname"]} {projectData["Drivetrain"][i]["projectdetails"]}'
-        limitText = text[:33]
-        driveTrain_canvas.create_text(30, 75 + g, text=limitText, font=("Arial", 8), fill="white", anchor='w')
-        driveTrain_canvas.create_text(30, 98 + g, text=f'{int(projectData["Drivetrain"][i]["percent"] * 100)}%', font=("Arial", 8), fill="white", anchor='e')
+        limitText = f'{cutStringToLength(text)} ({projectData["Drivetrain"][i]["Stage"]})'
+        driveTrain_canvas.create_text(40, 75 + g, text=limitText, font=("Arial", 12), fill="white", anchor='w')
         percentage = projectData["Drivetrain"][i]["percent"]
-        driveTrain_canvas.create_rectangle(30, 88 + g, 170, 108 + g, fill="white")
+        driveTrain_canvas.create_rectangle(40, 88 + g, 180, 108 + g, fill="white")
         if percentage == 0.00:
-            driveTrain_canvas.create_rectangle(30, 88 + g, 30, 108 + g, fill="orange")
+            driveTrain_canvas.create_rectangle(40, 88 + g, 40, 108 + g, fill="orange")
         elif is_overdue(projectData["Drivetrain"][i]["date"]) and percentage != 0.00:
-            driveTrain_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="red")
+            driveTrain_canvas.create_rectangle(40, 88 + g, 40 + (140 * percentage), 108 + g, fill="red")
         else:
-            driveTrain_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="orange")
+            driveTrain_canvas.create_rectangle(40, 88 + g, 40 + (140 * percentage), 108 + g, fill="orange")
+        driveTrain_canvas.create_text(130, 98 + g, text=f'{int(projectData["Drivetrain"][i]["percent"] * 100)}%', font=("Arial bold", 12), fill="black", anchor='e')
         g += 70
 
 
@@ -293,17 +306,18 @@ def displaySuspensionData():
 
     for i in range(7):
         text = f'{projectData["Suspension"][i]["projectname"]} {projectData["Suspension"][i]["projectdetails"]}'
-        limitText = text[:33]
-        suspension_canvas.create_text(30, 75 + g, text=limitText, font=("Arial", 8), fill="white", anchor='w')
-        suspension_canvas.create_text(30, 98 + g, text=f'{int(projectData["Suspension"][i]["percent"] * 100)}%', font=("Arial", 8), fill="white", anchor='e')
+        limitText = f'{cutStringToLength(text)} ({projectData["Suspension"][i]["Stage"]})'
+        suspension_canvas.create_text(40, 75 + g, text=limitText, font=("Arial", 12), fill="white", anchor='w')
+
         percentage = projectData["Suspension"][i]["percent"]
-        suspension_canvas.create_rectangle(30, 88 + g, 170, 108 + g, fill="white")
+        suspension_canvas.create_rectangle(40, 88 + g, 180, 108 + g, fill="white")
         if percentage == 0.00:
-            suspension_canvas.create_rectangle(30, 88 + g, 30, 108 + g, fill="orange")
+            suspension_canvas.create_rectangle(40, 88 + g, 40, 108 + g, fill="orange")
         elif is_overdue(projectData["Suspension"][i]["date"]) and percentage != 0.00:
-            suspension_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="red")
+            suspension_canvas.create_rectangle(40, 88 + g, 40 + (140 * percentage), 108 + g, fill="red")
         else:
-            suspension_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="orange")
+            suspension_canvas.create_rectangle(40, 88 + g, 40 + (140 * percentage), 108 + g, fill="orange")
+        suspension_canvas.create_text(130, 98 + g, text=f'{int(projectData["Suspension"][i]["percent"] * 100)}%', font=("Arial bold", 12), fill="black", anchor='e')
         g += 70
 
 
@@ -314,17 +328,17 @@ def displayChassisData():
 
     for i in range(7):
         text = f'{projectData["Chassis"][i]["projectname"]} {projectData["Chassis"][i]["projectdetails"]}'
-        limitText = text[:33]
-        chassis_canvas.create_text(30, 75 + g, text=limitText, font=("Arial", 8), fill="white", anchor='w')
-        chassis_canvas.create_text(30, 98 + g, text=f'{int(projectData["Chassis"][i]["percent"] * 100)}%', font=("Arial", 8), fill="white", anchor='e')
+        limitText = f'{cutStringToLength(text)} ({projectData["Chassis"][i]["Stage"]})'
+        chassis_canvas.create_text(40, 75 + g, text=limitText, font=("Arial", 12), fill="white", anchor='w')
         percentage = projectData["Chassis"][i]["percent"]
-        chassis_canvas.create_rectangle(30, 88 + g, 170, 108 + g, fill="white")
+        chassis_canvas.create_rectangle(40, 88 + g, 180, 108 + g, fill="white")
         if percentage == 0.00:
-            chassis_canvas.create_rectangle(30, 88 + g, 30, 108 + g, fill="orange")
+            chassis_canvas.create_rectangle(40, 88 + g, 40, 108 + g, fill="orange")
         elif is_overdue(projectData["Chassis"][i]["date"]) and percentage != 0.00:
-            chassis_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="red")
+            chassis_canvas.create_rectangle(40, 88 + g, 40 + (140 * percentage), 108 + g, fill="red")
         else:
-            chassis_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="orange")
+            chassis_canvas.create_rectangle(40, 88 + g, 40 + (140 * percentage), 108 + g, fill="orange")
+        chassis_canvas.create_text(130, 98 + g, text=f'{int(projectData["Chassis"][i]["percent"] * 100)}%', font=("Arial bold", 12), fill="black", anchor='e')
         g += 70
 
 
@@ -335,17 +349,17 @@ def displayElectricalData():
 
     for i in range(7):
         text = f'{projectData["Electrical"][i]["projectname"]} {projectData["Electrical"][i]["projectdetails"]}'
-        limitText = text[:33]
-        electrical_canvas.create_text(30, 75 + g, text=limitText, font=("Arial", 8), fill="white", anchor='w')
-        electrical_canvas.create_text(30, 98 + g, text=f'{int(projectData["Electrical"][i]["percent"] * 100)}%', font=("Arial", 8), fill="white", anchor='e')
+        limitText = f'{cutStringToLength(text)} ({projectData["Electrical"][i]["Stage"]})'
+        electrical_canvas.create_text(40, 75 + g, text=limitText, font=("Arial", 12), fill="white", anchor='w')
         percentage = projectData["Electrical"][i]["percent"]
-        electrical_canvas.create_rectangle(30, 88 + g, 170, 108 + g, fill="white")
+        electrical_canvas.create_rectangle(40, 88 + g, 180, 108 + g, fill="white")
         if percentage == 0.00:
-            electrical_canvas.create_rectangle(30, 88 + g, 30, 108 + g, fill="orange")
+            electrical_canvas.create_rectangle(40, 88 + g, 40, 108 + g, fill="orange")
         elif is_overdue(projectData["Electrical"][i]["date"]) and percentage != 0.00:
-            electrical_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="red")
+            electrical_canvas.create_rectangle(40, 88 + g, 40 + (140 * percentage), 108 + g, fill="red")
         else:
-            electrical_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="orange")
+            electrical_canvas.create_rectangle(40, 88 + g, 40 + (140 * percentage), 108 + g, fill="orange")
+        electrical_canvas.create_text(130, 98 + g, text=f'{int(projectData["Electrical"][i]["percent"] * 100)}%', font=("Arial bold", 12), fill="black", anchor='e')
         g += 70
 
 
@@ -356,17 +370,17 @@ def displayAeroData():
 
     for i in range(7):
         text = f'{projectData["Aerodynamics"][i]["projectname"]} {projectData["Aerodynamics"][i]["projectdetails"]}'
-        limitText = text[:33]
-        aero_canvas.create_text(30, 75 + g, text=limitText, font=("Arial", 8), fill="white", anchor='w')
-        aero_canvas.create_text(30, 98 + g, text=f'{int(projectData["Aerodynamics"][i]["percent"] * 100)}%', font=("Arial", 8), fill="white", anchor='e')
+        limitText = f'{cutStringToLength(text)} ({projectData["Aerodynamics"][i]["Stage"]})'
+        aero_canvas.create_text(40, 75 + g, text=limitText, font=("Arial", 12), fill="white", anchor='w')
         percentage = projectData["Aerodynamics"][i]["percent"]
-        aero_canvas.create_rectangle(30, 88 + g, 170, 108 + g, fill="white")
+        aero_canvas.create_rectangle(40, 88 + g, 180, 108 + g, fill="white")
         if percentage == 0.00:
-            aero_canvas.create_rectangle(30, 88 + g, 30, 108 + g, fill="orange")
+            aero_canvas.create_rectangle(40, 88 + g, 40, 108 + g, fill="orange")
         elif is_overdue(projectData["Aerodynamics"][i]["date"]) and percentage != 0.00:
-            aero_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="red")
+            aero_canvas.create_rectangle(40, 88 + g, 40 + (140 * percentage), 108 + g, fill="red")
         else:
-            aero_canvas.create_rectangle(30, 88 + g, 30 + (140 * percentage), 108 + g, fill="orange")
+            aero_canvas.create_rectangle(40, 88 + g, 40 + (140 * percentage), 108 + g, fill="orange")
+        aero_canvas.create_text(130, 98 + g, text=f'{int(projectData["Aerodynamics"][i]["percent"] * 100)}%', font=("Arial bold", 12), fill="black", anchor='e')
         g += 70
 
 # Button that calls edit function for important Dates (CONTAINS MANY FUNCTIONS TO
@@ -526,19 +540,30 @@ def displayImportantDates():
     data = getImportantDates()
 
     footerBar.create_rectangle(0, 0, 1502, 152, fill=MSU_Maroon)  # Drawing over the old maroon rectangle
-    
-    footerBar.create_text(110, 40, text=f'{data["task1"]["task"]}  {data["task1"]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
-    footerBar.create_text(110, 110, text=f'{data["task2"]["task"]}  {data["task2"]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
-    
-    footerBar.create_text(600, 40, text=f'{data["task3"]["task"]}  {data["task3"]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
-    footerBar.create_text(600, 110, text=f'{data["task4"]["task"]}  {data["task4"]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
-    
-    footerBar.create_text(1050, 40, text=f'{data["task5"]["task"]}  {data["task5"]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
-    footerBar.create_text(1050, 110, text=f'{data["task6"]["task"]}  {data["task6"]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
+    for i in range(1,7):
+        key = f'task{i}'
+        if f'{data[key]["task"]}' == "":
+            continue
+        else:
+            match i:
+                case 1:
+                    footerBar.create_text(110, 40, text=f'• {data[key]["task"]}  {data[key]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
+                case 2:
+                    footerBar.create_text(110, 110, text=f'• {data[key]["task"]}  {data[key]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
+                case 3:
+                    footerBar.create_text(600, 40, text=f'• {data[key]["task"]}  {data[key]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
+                case 4:
+                    footerBar.create_text(600, 110, text=f'• {data[key]["task"]}  {data[key]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
+                case 5:
+                    footerBar.create_text(1050, 40, text=f'• {data[key]["task"]}  {data[key]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
+                case 6:
+                    footerBar.create_text(1050, 110, text=f'• {data[key]["task"]}  {data[key]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
 
+
+
+# Calling functions 
 
 displayImportantDates()
-
 dumpProjectData2JSON()
 
 displayControlsData()
@@ -548,6 +573,7 @@ displaySuspensionData()
 displayChassisData()
 displayElectricalData()
 displayAeroData()
+
 
 # Exit button for entire program
 
