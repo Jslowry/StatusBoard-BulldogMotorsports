@@ -148,12 +148,6 @@ def pullDataFromExcel():
     return projects
 
 
-def dumpProjectData2JSON():
-    projectData = pullDataFromExcel()
-    with open('excelData.json', 'w') as json_file:
-        json.dump(projectData, json_file)
-
-
 def getProjectData():
     with open('excelData.json', 'r') as json_file:
         projectData = json.load(json_file)
@@ -360,34 +354,22 @@ def getImportantDates():
 
 
 def displayImportantDates():
-
     data = getImportantDates()
-
     footerBar.create_rectangle(0, 0, 1502, 152, fill=MSU_Maroon)  # Drawing over the old maroon rectangle
-    for i in range(1, 7):
-        key = f'task{i}'
-        if f'{data[key]["task"]}' == "":
-            continue
-        else:
-            match i:
-                case 1:
-                    footerBar.create_text(110, 40, text=f'• {data[key]["task"]}  {data[key]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
-                case 2:
-                    footerBar.create_text(110, 110, text=f'• {data[key]["task"]}  {data[key]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
-                case 3:
-                    footerBar.create_text(600, 40, text=f'• {data[key]["task"]}  {data[key]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
-                case 4:
-                    footerBar.create_text(600, 110, text=f'• {data[key]["task"]}  {data[key]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
-                case 5:
-                    footerBar.create_text(1050, 40, text=f'• {data[key]["task"]}  {data[key]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
-                case 6:
-                    footerBar.create_text(1050, 110, text=f'• {data[key]["task"]}  {data[key]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
+    for i in range(0, 6):
+        key = f'task{i + 1}'
+        if f'{data[key]["task"]}' != "":
+            # these 5 lines find the spot where the important event is placed and place it
+            if i % 2 == 0: y = 110
+            else: y = 40
+            a = int(i / 2)
+            x = 50 + (500 * a)
+            footerBar.create_text(x, y, text=f'• {data[key]["task"]}  {data[key]["date"]}', font=("Helvetica", 20),fill="white", anchor="w")
 
 
 # Calling functions 
 
 displayImportantDates()
-dumpProjectData2JSON()
 
 
 displayData(controls_canvas, "Controls")
