@@ -57,102 +57,57 @@ Logo_label.image = logo
 Logo_label.place(x=400, y=50)
 
 
+def base_canvas_creator(section_canvas, section_str):
+    section_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
+    section_canvas.create_text(100, 25, text=section_str, font=("Arial", 25), fill="white")
+
+
 # Controls Column
-
 controls_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
-controls_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
-
-
-controls_canvas.create_text(100, 25, text="Controls", font=("Arial", 27), fill="white")
-
+base_canvas_creator(controls_canvas, "Controls")
 controls_canvas.place(x=100, y=200)
 
-
 # PowerTrain Column
-  
 powerTrain_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
-powerTrain_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
-
-
-powerTrain_canvas.create_text(100, 25, text="PowerTrain", font=("Arial", 27), fill="white")
-
+base_canvas_creator(powerTrain_canvas, "PowerTrain")
 powerTrain_canvas.place(x=350, y=200)
 
-
 # Drivetrain Column
-
 driveTrain_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
-driveTrain_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
-
-
-driveTrain_canvas.create_text(100, 25, text="DriveTrain", font=("Arial", 27), fill="white")
-
+base_canvas_creator(driveTrain_canvas, "DriveTrain")
 driveTrain_canvas.place(x=600, y=200)
 
-
 # Suspension Column
-
 suspension_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
-suspension_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
-
-
-suspension_canvas.create_text(100, 25, text="Suspension", font=("Arial", 27), fill="white")
-
+base_canvas_creator(suspension_canvas, "Suspension")
 suspension_canvas.place(x=850, y=200)
 
-
 # Chassis Column
-
 chassis_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
-chassis_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
-
-
-chassis_canvas.create_text(100, 25, text="Chassis", font=("Arial", 27), fill="white")
-
+base_canvas_creator(chassis_canvas, "Chassis")
 chassis_canvas.place(x=1100, y=200)
 
-
 # Electrical Column
-
 electrical_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
-electrical_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
-
-
-electrical_canvas.create_text(100, 25, text="Electrical", font=("Arial", 25), fill="white")
-
+base_canvas_creator(electrical_canvas, "Electrical")
 electrical_canvas.place(x=1350, y=200)
 
-
 # Aero Column
-
 aero_canvas = tk.Canvas(root, width=200, height=550, borderwidth=2, relief="raised")
-aero_canvas.create_rectangle(0, 0, 300, 600, fill=MSU_Maroon)
-
-
-aero_canvas.create_text(100, 25, text="Aero", font=("Arial", 25), fill="white")
-
+base_canvas_creator(aero_canvas, "Aero")
 aero_canvas.place(x=1600, y=200)
 
-
-
-
 # Bottom Schedule
-
 footerBar = tk.Canvas(root, width=1500, height=150, borderwidth=2, relief="groove")
 footerBar.create_rectangle(0, 0, 1502, 152, fill=MSU_Maroon)
-
-
 footerBar.place(x=250, y=850)
 
-
 # Important Dates Text
-
 label = tk.Label(root, text="Important Dates", font=('Arial', 55), bg="black", fg="white")
 label.place(x=715, y=760)
 
 
-#finds the last row of the excel file
-
+# finds the last row of the Excel file
 def findLastProjectRow():
     excelOpen = openpyxl.load_workbook('Master Schedule 2024.xlsx')
     activeExcel = excelOpen.active
@@ -164,7 +119,6 @@ def findLastProjectRow():
 
 
 # Populates the excelData file
-
 def pullDataFromExcel():
     excelOpen = openpyxl.load_workbook('Master Schedule 2024.xlsx')
     activeExcel = excelOpen.active
@@ -174,10 +128,10 @@ def pullDataFromExcel():
     for i in range(72, findLastProjectRow()):
         cell_section = activeExcel.cell(row=i, column=1)
         cell_percentage = activeExcel.cell(row=i, column=6)
-        cell_date = activeExcel.cell(row=i, column=8) # end date
+        cell_date = activeExcel.cell(row=i, column=8)  # end date
         cell_system = activeExcel.cell(row=i, column=2)
         cell_details = activeExcel.cell(row=i, column=4)
-        cell_PartStage = activeExcel.cell(row=i, column =3)
+        cell_PartStage = activeExcel.cell(row=i, column=3)
 
         section_value = cell_section.value
         cell_section = section_value.strip()
@@ -214,7 +168,7 @@ def is_overdue(projectDate):
     todays_date = str(date.today())
     SlicedTodaysDate = todays_date[:10]
     SlicedTodaysDate = datetime.strptime(SlicedTodaysDate, date_format)
-    if SlicedTodaysDate > SlicedProjectDate + timedelta(days=30): # Change days for overdue limit
+    if SlicedTodaysDate > SlicedProjectDate + timedelta(days=30):  # Change days for overdue limit
         return True 
     else:
         return False
@@ -222,7 +176,7 @@ def is_overdue(projectDate):
 
 def cutStringToLength(text):
     sliced = ""
-    if(len(text)> 17):  # if its oversized
+    if len(text) > 17:  # if its oversized
         for i in reversed(text):  # start at end and go through 1 by 1
             if i == " ":  # if i's character == " " then
                 break
@@ -250,8 +204,7 @@ def displayData(section_canvas, section_str):
             section_canvas.create_rectangle(40, 88 + g, 40 + (140 * percentage), 108 + g, fill="red")
         else:
             section_canvas.create_rectangle(40, 88 + g, 40 + (140 * percentage), 108 + g, fill="orange")
-        section_canvas.create_text(130, 98 + g, text=f'{int(projectData[section_str][i]["percent"] * 100)}%',
-                                    font=("Arial bold", 12), fill="black", anchor='e')
+        section_canvas.create_text(130, 98 + g, text=f'{int(projectData[section_str][i]["percent"] * 100)}%', font=("Arial bold", 12), fill="black", anchor='e')
         g += 70
 
 
@@ -361,7 +314,7 @@ def editButton():
     task2.place(x=70, y=95)
     task2Entry.place(x=50, y=120)
     task2Task.place(x=18, y=120)
-    task2Date.place(x= 18, y=145)
+    task2Date.place(x=18, y=145)
     task2EntryDate.place(x=50, y=145)
 
     task3.place(x=295, y=10)
@@ -411,7 +364,7 @@ def displayImportantDates():
     data = getImportantDates()
 
     footerBar.create_rectangle(0, 0, 1502, 152, fill=MSU_Maroon)  # Drawing over the old maroon rectangle
-    for i in range(1,7):
+    for i in range(1, 7):
         key = f'task{i}'
         if f'{data[key]["task"]}' == "":
             continue
