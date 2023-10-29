@@ -245,7 +245,7 @@ def editButton():
     task5Entry = tk.Entry(edit_window)
     task5EntryDate = tk.Entry(edit_window)
 
-    task6 = tk.Label(edit_window, text="Task 6:")
+    task6 = tk.Label(edit_window, text="Task six:")
     task6Task = tk.Label(edit_window, text="Task:")
     task6Date = tk.Label(edit_window, text="Date:")
     task6Entry = tk.Entry(edit_window)
@@ -304,30 +304,30 @@ def editButton():
     task1Task.place(x=18, y=35)
     task1Date.place(x=18, y=60)
     task1EntryDate.place(x=50, y=60)
-    
-    task2.place(x=70, y=95)
-    task2Entry.place(x=50, y=120)
-    task2Task.place(x=18, y=120)
-    task2Date.place(x=18, y=145)
-    task2EntryDate.place(x=50, y=145)
 
-    task3.place(x=295, y=10)
-    task3Entry.place(x=275, y=35)
-    task3Task.place(x=243, y=35)
-    task3Date.place(x=243, y=60)
-    task3EntryDate.place(x=275, y=60)
+    task2.place(x=295, y=10)
+    task2Entry.place(x=275, y=35)
+    task2Task.place(x=243, y=35)
+    task2Date.place(x=243, y=60)
+    task2EntryDate.place(x=275, y=60)
 
-    task4.place(x=295, y=95)
-    task4Entry.place(x=275, y=120)
-    task4Task.place(x=243, y=120)
-    task4Date.place(x=243, y=145)
-    task4EntryDate.place(x=275, y=145)
+    task3.place(x=525, y=10)
+    task3Entry.place(x=500, y=35)
+    task3Task.place(x=468, y=35)
+    task3Date.place(x=468, y=60)
+    task3EntryDate.place(x=500, y=60)
 
-    task5.place(x=525, y=10)
-    task5Entry.place(x=500, y=35)
-    task5Task.place(x=468, y=35)
-    task5Date.place(x=468, y=60)
-    task5EntryDate.place(x=500, y=60)
+    task4.place(x=70, y=95)
+    task4Entry.place(x=50, y=120)
+    task4Task.place(x=18, y=120)
+    task4Date.place(x=18, y=145)
+    task4EntryDate.place(x=50, y=145)
+
+    task5.place(x=295, y=95)
+    task5Entry.place(x=275, y=120)
+    task5Task.place(x=243, y=120)
+    task5Date.place(x=243, y=145)
+    task5EntryDate.place(x=275, y=145)
 
     task6.place(x=530, y=95)
     task6Entry.place(x=500, y=120)
@@ -356,11 +356,13 @@ def getImportantDates():
 def displayImportantDates():
     data = getImportantDates()
     footerBar.create_rectangle(0, 0, 1502, 152, fill=MSU_Maroon)  # Drawing over the old maroon rectangle
+    b = 0
     for i in range(0, 6):
         key = f'task{i + 1}'
         if f'{data[key]["task"]}' != "":
-            x, y = [(50, 40), (550, 40), (1050, 40), (50, 110), (550, 110), (1050, 110)][i]
-            footerBar.create_text(x, y, text=f'• {data[key]["task"]}  {data[key]["date"]}', font=("Helvetica", 20),fill="white", anchor="w")
+            x, y = [(50, 40), (550, 40), (1050, 40), (50, 110), (550, 110), (1050, 110)][b]
+            footerBar.create_text(x, y, text=f'• {data[key]["task"]}  {data[key]["date"]}', font=("Helvetica", 20), fill="white", anchor="w")
+            b += 1
 
 
 # Calling functions 
