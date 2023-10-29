@@ -359,11 +359,7 @@ def displayImportantDates():
     for i in range(0, 6):
         key = f'task{i + 1}'
         if f'{data[key]["task"]}' != "":
-            # these 5 lines find the spot where the important event is placed and place it
-            if i % 2 == 0: y = 110
-            else: y = 40
-            a = int(i / 2)
-            x = 50 + (500 * a)
+            x, y = [(50, 40), (550, 40), (1050, 40), (50, 110), (550, 110), (1050, 110)][i]
             footerBar.create_text(x, y, text=f'• {data[key]["task"]}  {data[key]["date"]}', font=("Helvetica", 20),fill="white", anchor="w")
 
 
