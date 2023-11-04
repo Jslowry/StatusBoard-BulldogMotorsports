@@ -7,7 +7,6 @@ import time
 from datetime import datetime, date, timedelta
 from downloadExcel import updateExcelFile
 
-
 start_time = time.time()
 
 
@@ -42,10 +41,6 @@ maroonX = ImageTk.PhotoImage(imageExitMaroon)
 imageSaveExit = Image.open("save and exit.png")
 saveExit = ImageTk.PhotoImage(imageSaveExit)
 
-
-# Update's Excel File
-
-updateExcelFile()
 
 
 # Placing Logo
@@ -365,7 +360,17 @@ def displayImportantDates():
             b += 1
 
 
-# Calling functions 
+# Update's Excel File
+
+def dumpProjectData2JSON():
+    projectData = pullDataFromExcel()
+    with open('excelData.json', 'w') as json_file:
+        json.dump(projectData, json_file)
+
+
+updateExcelFile()
+dumpProjectData2JSON()
+
 
 displayImportantDates()
 
