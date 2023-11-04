@@ -6,6 +6,7 @@ import openpyxl
 import time
 from datetime import datetime, date, timedelta
 from downloadExcel import updateExcelFile
+import os
 
 start_time = time.time()
 
@@ -22,23 +23,23 @@ label.place(x=600, y=50)
 MSU_Maroon = "#5D1725"
 
 # Images stored ↓↓↓↓
-
-imageLogo = Image.open("StatusBoardLogo.png")
+file_path = "C:/Users/FSAE/Downloads/StatusBoardTest/StatusBoardBulldogMotorsports-main/"
+imageLogo = Image.open(file_path + "StatusBoardLogo.png")
 logo = ImageTk.PhotoImage(imageLogo)
 
-imageGear = Image.open("gearIcon.png")
+imageGear = Image.open(file_path + "gearIcon.png")
 gear = ImageTk.PhotoImage(imageGear, width=20, height=20)
 
-imageExit = Image.open("redX.png")
+imageExit = Image.open(file_path + "redX.png")
 redX = ImageTk.PhotoImage(imageExit)
 
-imageSave = Image.open("saveButton.png")
+imageSave = Image.open(file_path + "saveButton.png")
 saveButton = ImageTk.PhotoImage(imageSave)
 
-imageExitMaroon = Image.open("maroonX.png")
+imageExitMaroon = Image.open(file_path + "maroonX.png")
 maroonX = ImageTk.PhotoImage(imageExitMaroon)
 
-imageSaveExit = Image.open("save and exit.png")
+imageSaveExit = Image.open(file_path + "save and exit.png")
 saveExit = ImageTk.PhotoImage(imageSaveExit)
 
 
@@ -104,7 +105,7 @@ label.place(x=715, y=760)
 
 # finds the last row of the Excel file
 def findLastProjectRow():
-    excelOpen = openpyxl.load_workbook('Master Schedule 2024.xlsx')
+    excelOpen = openpyxl.load_workbook(file_path + 'Master Schedule 2024.xlsx')
     activeExcel = excelOpen.active
     for i in range(72, 500):
         cell_section = activeExcel.cell(row=i, column=1)
@@ -115,7 +116,7 @@ def findLastProjectRow():
 
 # Populates the excelData file
 def pullDataFromExcel():
-    excelOpen = openpyxl.load_workbook('Master Schedule 2024.xlsx')
+    excelOpen = openpyxl.load_workbook(file_path + 'Master Schedule 2024.xlsx')
     activeExcel = excelOpen.active
     max_row = findLastProjectRow()
 
@@ -144,7 +145,7 @@ def pullDataFromExcel():
 
 
 def getProjectData():
-    with open('excelData.json', 'r') as json_file:
+    with open(file_path + 'excelData.json', 'r') as json_file:
         projectData = json.load(json_file)
     return projectData
 
@@ -279,7 +280,7 @@ def editButton():
             }
         }
         # writes it to important_dates.json
-        with open("important_dates.json", "w") as json_file:
+        with open(file_path + "important_dates.json", "w") as json_file:
             json.dump(data, json_file)
 
     # reads the data that was put into important_dates and returns the data in the form of a dictionary
@@ -346,7 +347,7 @@ ImpDatesButton.place(x=85, y=20)
 
 
 def getImportantDates():
-    with open("important_dates.json", "r") as json_file:
+    with open(file_path + "important_dates.json", "r") as json_file:
         importantDataList = json.load(json_file)
     return importantDataList
 
@@ -367,7 +368,7 @@ def displayImportantDates():
 
 def dumpProjectData2JSON():
     projectData = pullDataFromExcel()
-    with open('excelData.json', 'w') as json_file:
+    with open(file_path + 'excelData.json', 'w') as json_file:
         json.dump(projectData, json_file)
 
 
