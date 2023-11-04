@@ -150,17 +150,20 @@ def getProjectData():
 
 
 def is_overdue(projectDate):
-    date_format = '%Y-%m-%d'
-    projectDate = str(projectDate)
-    SlicedProjectDate = projectDate[:10]
-    SlicedProjectDate = datetime.strptime(SlicedProjectDate, date_format)
-    todays_date = str(date.today())
-    SlicedTodaysDate = todays_date[:10]
-    SlicedTodaysDate = datetime.strptime(SlicedTodaysDate, date_format)
-    if SlicedTodaysDate > SlicedProjectDate + timedelta(days=30):  # Change days for overdue limit
-        return True 
-    else:
-        return False
+    try:
+        date_format = '%Y-%m-%d'
+        projectDate = str(projectDate)
+        SlicedProjectDate = projectDate[:10]
+        SlicedProjectDate = datetime.strptime(SlicedProjectDate, date_format)
+        todays_date = str(date.today())
+        SlicedTodaysDate = todays_date[:10]
+        SlicedTodaysDate = datetime.strptime(SlicedTodaysDate, date_format)
+        if SlicedTodaysDate > SlicedProjectDate + timedelta(days=30):  # Change days for overdue limit
+            return True
+        else:
+            return False
+    except:
+        print("ERROR: There is something wrong in the excel file")
     
 
 def cutStringToLength(text):
